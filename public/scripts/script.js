@@ -263,7 +263,7 @@ function play(delta) {
   explorer.y += explorer.vy;
 
   //Contain the explorer inside the area of the dungeon
-  contain(explorer, {x: 28, y: 10, width: 488, height: 480});
+  contain(explorer, {x: 5, y: 5, width: 850, height: 680});
   //contain(explorer, stage);
 
   //Set `explorerHit` to `false` before checking for a collision
@@ -276,7 +276,7 @@ function play(delta) {
     blob.y += blob.vy;
 
     //Check the blob's screen boundaries
-    let blobHitsWall = contain(blob, {x: 28, y: 10, width: 488, height: 480});
+    let blobHitsWall = contain(blob, {x: 5, y: 5, width: 850, height: 680});
 
     //If the blob hits the top or bottom of the stage, reverse
     //its direction

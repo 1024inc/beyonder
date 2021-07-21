@@ -18,15 +18,6 @@
 	"sourceSize": {"w":32,"h":32},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"tropic0.png":
-{
-	"frame": {"x":2,"y":36,"w":512,"h":512},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
-	"sourceSize": {"w":512,"h":512},
-	"pivot": {"x":0.5,"y":0.5}
-},
 "explorer.png":
 {
 	"frame": {"x":2,"y":2,"w":21,"h":32},
