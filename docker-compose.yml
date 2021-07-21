@@ -8,15 +8,14 @@ services:
 #    env_file:
 #      - var.env
     command: npm run dev
-#    volumes:
-#      - server.js:/server.js
-#      - ./pages:/app/pages
-#      - ./src:/app/src
-#      - ./public:/app/public
-#      - ./package.json:/app/package.json
-#      - ./package-lock.json:/app/package-lock.json
-#      - ./server.js:/app/server.js
-#      - ./sockets.js:/app/sockets.js
+    volumes:
+      - ./pages:/app/pages
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
+      - ./server.js:/app/server.js
+      - ./socket.js:/app/socket.js
 
     ports:
       - "4998:4998"

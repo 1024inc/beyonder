@@ -4,8 +4,8 @@ module.exports = io => {
     io.on('connect', (socket) => {
         console.log('User connected')
 
-        onEmitWithInterval(socket, 'stats', '', 10000)
-        onBroadcastWithInterval(socket, 'ranking', '', 50000)
+        // onEmitWithInterval(socket, 'stats', '', 10000)
+        // onBroadcastWithInterval(socket, 'ranking', '', 50000)
         onEmit(socket, 'news', 'hello')
 
         onReceive(socket)
@@ -16,13 +16,13 @@ module.exports = io => {
 const getApiAndEmit = ( socket, topic) => {
     const response = new Date();
     socket.emit(topic, response);
-    console.log(`Emitting on ${topic} topic`)
+    console.log(`Emitting on ${topic} topic: ${response}`)
 };
 
 const getApiAndBroadcast = ( socket, topic) => {
     const response = new Date();
     socket.emit(topic, response);
-    console.log(`Emitting on ${topic} topic`)
+    console.log(`Emitting on ${topic} topic: ${response}`)
 };
 
 function onReceive(socket){
@@ -39,6 +39,7 @@ function onEmitWithInterval(socket, topic, message, interval) {
 }
 
 function onEmit(socket, topic, message) {
+    console.log(`emitting on ${topic} topic with message ${message}`)
     socket.emit(topic, {
         message: message
     })
