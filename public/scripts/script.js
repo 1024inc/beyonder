@@ -43,6 +43,7 @@ function loadErrorHandler(e) {
 
 loader
     .add('images/treasureHunter.json')
+    .add('images/cat.png')
     .on('progress', loadProgressHandler)
     .on('complete', completeLoadingHandler)
     .on('error', loadErrorHandler)
@@ -72,8 +73,16 @@ function setup() {
   door.position.set(32, 0);
   gameScene.addChild(door);
 
+  // //Explorer
+  // explorer = new Sprite(id["blob.png"]);
+  // explorer.x = 68;
+  // explorer.y = gameScene.height / 2 - explorer.height / 2;
+  // explorer.vx = 0;
+  // explorer.vy = 0;
+  // gameScene.addChild(explorer);
+
   //Explorer
-  explorer = new Sprite(id["explorer.png"]);
+  explorer = new Sprite(resources["images/cat.png"]);
   explorer.x = 68;
   explorer.y = gameScene.height / 2 - explorer.height / 2;
   explorer.vx = 0;

@@ -36,6 +36,15 @@
 	"sourceSize": {"w":21,"h":32},
 	"pivot": {"x":0.5,"y":0.5}
 },
+"cat.png":
+{
+	"frame": {"x":2,"y":2,"w":21,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":21,"h":32},
+	"sourceSize": {"w":21,"h":32},
+	"pivot": {"x":0.5,"y":0.5}
+},
 "treasure.png":
 {
 	"frame": {"x":25,"y":2,"w":28,"h":24},
