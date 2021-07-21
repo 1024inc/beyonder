@@ -12,6 +12,9 @@ const nextApp = next({ dev })
 const nextHandler = nextApp.getRequestHandler()
 const port  = 4998
 
+console.log('io', io)
+console.log('socketHandler', socketHandler)
+
 socketHandler(io)
 
 nextApp.prepare().then(() => {
