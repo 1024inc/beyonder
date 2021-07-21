@@ -1,6 +1,9 @@
 const app = require('express')()
 const server = require('http').Server(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server, { cors: {
+    origin: "http://loclahost:4998",
+    methods: ["GET", "POST"]
+  }})
 const next = require('next')
 const socketHandler = require('./socket');
 
