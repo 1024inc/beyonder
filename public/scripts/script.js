@@ -45,6 +45,7 @@ loader
     .add('images/treasureHunter.json')
     .add('images/narval_temp.png')
     .add('images/tropic0.png')
+    .add('images/treasure.png')
     .on('progress', loadProgressHandler)
     .on('complete', completeLoadingHandler)
     .on('error', loadErrorHandler)
@@ -95,7 +96,9 @@ function setup() {
   gameScene.addChild(explorer);
 
   //Treasure
-  treasure = new Sprite(id["treasure.png"]);
+  let treasureTexture = new PIXI.Texture(resources["images/treasure.png"].texture, new PIXI.Rectangle(0, 0, 32, 32));
+  treasure = new Sprite(treasureTexture);
+
   treasure.x = gameScene.width - treasure.width - 48;
   treasure.y = gameScene.height / 2 - treasure.height / 2;
   gameScene.addChild(treasure);
