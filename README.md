@@ -1,7 +1,8 @@
 
 ```bash
-$ git clone 
-$ npm install
+$ git clone git@github.com:1024inc/beyonder.git
+
+# Server is will be running on port 4998
 # Start dev express server with socket.io 
 $ npm run dev
 # Start dev next server without socket.io
