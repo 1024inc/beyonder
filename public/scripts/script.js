@@ -44,13 +44,14 @@ function loadErrorHandler(e) {
 loader
     .add('images/treasureHunter.json')
     .add('images/narval_temp.png')
+    .add('images/beach.png')
     .on('progress', loadProgressHandler)
     .on('complete', completeLoadingHandler)
     .on('error', loadErrorHandler)
     .load(setup);
 // .load((loader, resources) => setup(app, statsContainer, loader, resources));
 
-let state, explorer, treasure, blobs, chimes, exit, player, dungeon,
+let state, explorer, treasure, blobs, chimes, exit, player, map,
     door, healthBar, message, gameScene, gameOverScene, enemies, id;
 
 function setup() {
@@ -64,22 +65,17 @@ function setup() {
   //Create an alias for the texture atlas frame ids
   id = resources["images/treasureHunter.json"].textures;
 
-  //Dungeon
-  dungeon = new Sprite(id["dungeon.png"]);
-  gameScene.addChild(dungeon);
+  //Map
+  // map = new Sprite(id["beach.png"]);
+  map = new PIXI.Texture(resources["images/beach.png"].texture, new PIXI.Rectangle(0, 0, 840, 680));
+  var maprender = new Sprite(map);
+
+  gameScene.addChild(maprender);
 
   //Door
   door = new Sprite(id["door.png"]);
   door.position.set(32, 0);
   gameScene.addChild(door);
-
-  //Explorer
-  // explorer = new Sprite(id["blob.png"]);
-  // explorer.x = 68;
-  // explorer.y = gameScene.height / 2 - explorer.height / 2;
-  // explorer.vx = 0;
-  // explorer.vy = 0;
-  // gameScene.addChild(explorer);
 
   //Explorer
   let char = new PIXI.Texture(resources["images/narval_temp.png"].texture, new PIXI.Rectangle(0, 0, 64, 64));
@@ -258,7 +254,7 @@ function play(delta) {
   explorer.x += explorer.vx;
   explorer.y += explorer.vy;
 
-  //Contain the explorer inside the area of the dungeon
+  //Contain the explorer inside the area of the map
   contain(explorer, {x: 28, y: 10, width: 488, height: 480});
   //contain(explorer, stage);
 
