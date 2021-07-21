@@ -43,7 +43,7 @@ function loadErrorHandler(e) {
 
 loader
     .add('images/treasureHunter.json')
-    .add('images/cat.png')
+    .add('images/narval_temp.png')
     .on('progress', loadProgressHandler)
     .on('complete', completeLoadingHandler)
     .on('error', loadErrorHandler)
@@ -73,7 +73,7 @@ function setup() {
   door.position.set(32, 0);
   gameScene.addChild(door);
 
-  // //Explorer
+  //Explorer
   // explorer = new Sprite(id["blob.png"]);
   // explorer.x = 68;
   // explorer.y = gameScene.height / 2 - explorer.height / 2;
@@ -82,7 +82,8 @@ function setup() {
   // gameScene.addChild(explorer);
 
   //Explorer
-  explorer = new Sprite(resources["images/cat.png"]);
+  let char = new PIXI.Texture(resources["images/narval_temp.png"].texture, new PIXI.Rectangle(0, 0, 64, 64));
+  explorer = new Sprite(char);
   explorer.x = 68;
   explorer.y = gameScene.height / 2 - explorer.height / 2;
   explorer.vx = 0;
