@@ -1,4 +1,4 @@
-DOCKER_REPOSITORY=gcr.io/beyond-pricing-1024/beyond-game
+DOCKER_REPOSITORY=gcr.io/beyond-pricing-1024/beyonder
 DOCKER_TAG=latest
 
 build:

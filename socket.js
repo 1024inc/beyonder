@@ -1,22 +1,29 @@
 let interval;
 
-const getApiAndEmit = ( socket, topic) => {
-    const response = new Date();
-    socket.emit(topic, response);
-    console.log(`Emitting on ${topic} topic`)
-};
-
 module.exports = io => {
     io.on('connect', (socket) => {
         console.log('User connected')
 
-        onEmitWithInterval(socket, 'ranking', '', 1000)
+        onEmitWithInterval(socket, 'stats', '', 10000)
+        onBroadcastWithInterval(socket, 'ranking', '', 50000)
         onEmit(socket, 'news', 'hello')
 
         onReceive(socket)
         onDisconnect(socket)
     })
 }
+
+const getApiAndEmit = ( socket, topic) => {
+    const response = new Date();
+    socket.emit(topic, response);
+    console.log(`Emitting on ${topic} topic`)
+};
+
+const getApiAndBroadcast = ( socket, topic) => {
+    const response = new Date();
+    socket.emit(topic, response);
+    console.log(`Emitting on ${topic} topic`)
+};
 
 function onReceive(socket){
     socket.on('mes', (msg) => {
@@ -35,6 +42,13 @@ function onEmit(socket, topic, message) {
     socket.emit(topic, {
         message: message
     })
+}
+
+function onBroadcastWithInterval(socket, topic, message, interval) {
+    if (interval) {
+        clearInterval(interval);
+    }
+    interval = setInterval(() => getApiAndBroadcast(socket, topic), interval);
 }
 
 function onDisconnect(socket) {

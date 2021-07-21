@@ -1,55 +1,54 @@
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
-// import * as P from 'pixi.js'
 
 
 function useSocket(url) {
-    const [socket, setSocket] = useState(null)
+    const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-        const socketIo = io(url)
-        setSocket(socketIo)
+        const socketIo = io(url);
+        setSocket(socketIo);
         function cleanup() {
-            socketIo.disconnect()
+            socketIo.disconnect();
         }
-        return cleanup
-    }, [])
-    return socket
+        return cleanup;
+    }, []);
+    return socket;
 }
 
 
 const Game = () => {
-    // const socket = useSocket('http://localhost:3000')
-    // const [statsContainer, setStatsContainer] = useState('')
-    //
-    // useEffect(() => {
-    //     let statsContainer = document.getElementById('stats');
-    //
-    //     function handleEvent(payload) {
-    //         console.log('received from server', payload);
-    //     }
-    //     if (socket) {
-    //         socket.on('ranking', handleEvent)
-    //     }
-    //     if (socket) {
-    //         socket.on('news', handleEvent)
-    //     }
-    //     if (socket && statsContainer) {
-    //         let score = statsContainer.innerHTML;
-    //         console.log('message to server', score )
-    //         socket.emit('mes', score)
-    //     }
-    //
-    //
-    // }, [socket, statsContainer])
-    //
-    // const itemCount = useRef(null);
+    const socket = useSocket('http://localhost:4998')
+    const [statsContainer, setStatsContainer] = useState('')
+
+    useEffect(() => {
+        let statsContainer = document.getElementById('stats');
+
+        function handleEvent(payload) {
+            console.log('received from server', payload);
+        }
+        if (socket) {
+            socket.on('ranking', handleEvent)
+        }
+        if (socket) {
+            socket.on('news', handleEvent)
+        }
+        if (socket && statsContainer) {
+            let score = statsContainer.innerHTML;
+            console.log('message to server', score )
+            socket.emit('mes', score)
+        }
+
+
+    }, [socket, statsContainer])
+
+    const itemCount = useRef(null);
 
     return (
-        <div className="bg-primary container">
-            <div className="row">
-                <div id="app" className="mt-4 col-md-9 p-0"></div>
-                <div id="stats" className="mt-4 col-md-3 p-0" ></div>
+        <div className='bg-primary container'>
+            <div className='row'>
+                <div id='app' className='mt-4 col-md-9 p-0' > </div>
+                <div id='stats' className='mt-4 col-md-3 p-0' ref={itemCount}> </div>
             </div>
         </div>
     );

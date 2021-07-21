@@ -7,7 +7,7 @@ const socketHandler = require('./socket');
 const dev = process.env.NODE_ENV != 'production'
 const nextApp = next({ dev })
 const nextHandler = nextApp.getRequestHandler()
-const port  = 3000
+const port  = 4998
 
 socketHandler(io)
 

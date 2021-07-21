@@ -1,12 +1,19 @@
 FROM node:latest
 
-WORKDIR /app
 
-COPY package.json package.json
-COPY package-lock.json package-lock.json
+COPY package.json /app
+COPY package-lock.json /app
 
 RUN npm install
 
-COPY . .
+WORKDIR /app
+
+COPY pages /app/pages
+COPY public /app/public
+COPY src /app/src
+COPY next.config.js /app
+COPY server.js /app
+COPY socket.js /app
 
 CMD ["node", "server.js"]
+q
