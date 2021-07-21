@@ -268,7 +268,7 @@ function play(delta) {
     blob.y += blob.vy;
 
     //Check the blob's screen boundaries
-    let blobHitsWall = contain(blob, {x: 28, y: 10, width: 488, height: 480});
+    let blobHitsWall = contain(blob, {x: 28, y: 10, width: 840, height: 680});
 
     //If the blob hits the top or bottom of the stage, reverse
     //its direction
