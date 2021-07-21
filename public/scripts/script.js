@@ -15,8 +15,8 @@ let Application = PIXI.Application,
 
 
 const app = new PIXI.Application({
-  width: 512,
-  height: 512,
+  width: 840,
+  height: 680,
   antialiasing: true,
   transparent: false,
   resolution: 1
@@ -41,18 +41,19 @@ function loadErrorHandler(e) {
 }
 
 
-app.loader
-    .add('map', 'images/treasureHunter.json')
+loader
+    .add('images/treasureHunter.json')
     .on('progress', loadProgressHandler)
     .on('complete', completeLoadingHandler)
     .on('error', loadErrorHandler)
     .load(setup);
-    // .load((loader, resources) => setup(app, statsContainer, loader, resources));
+// .load((loader, resources) => setup(app, statsContainer, loader, resources));
 
 let state, explorer, treasure, blobs, chimes, exit, player, dungeon,
     door, healthBar, message, gameScene, gameOverScene, enemies, id;
 
 function setup() {
+// function setup(app, statsContainer, loader, resources) {
 
   //Make the game scene and add it to the stage
   gameScene = new Container();
@@ -441,10 +442,10 @@ function keyboard(keyCode) {
 
   //Attach event listeners
   window.addEventListener(
-    "keydown", key.downHandler.bind(key), false
+      "keydown", key.downHandler.bind(key), false
   );
   window.addEventListener(
-    "keyup", key.upHandler.bind(key), false
+      "keyup", key.upHandler.bind(key), false
   );
   return key;
 }
