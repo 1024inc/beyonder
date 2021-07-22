@@ -173,11 +173,26 @@ function setup() {
 
   //Create the `gameOver` scene
   gameOverScene = new Container();
+
   var bg = new PIXI.Sprite(PIXI.Texture.WHITE);
   bg.width = 840;
   bg.height = 680;
   bg.tint = 0xffffff;
-  gameOverScene.addChild(bg)
+  gameOverScene.addChild(bg);
+
+  /**
+  * Order of operations matters for rendering objects in Pixi.  e.g. if this code block
+  * precedes the `bg` related codeblock above, our `narwhalSprite` is not visible
+  * TODO: Determine if there is a z-index equivalent to use.
+  */
+  var narwhalLoserAnimationTexture = new PIXI.Texture(resources["images/narwhal_right.png"].texture, new PIXI.Rectangle(0, 0, 64, 64));
+  var narwhalSprite = new PIXI.Sprite(narwhalLoserAnimationTexture);
+  narwhalSprite.width = 512;
+  narwhalSprite.height = 512;
+  narwhalSprite.x = 460;
+  narwhalSprite.y = 320;
+  gameOverScene.addChild(narwhalSprite);
+
   app.stage.addChild(gameOverScene);
 
   //Make the `gameOver` scene invisible when the game first starts
