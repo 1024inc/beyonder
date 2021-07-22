@@ -1,4 +1,3 @@
-
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
 let Application = PIXI.Application,
@@ -41,9 +40,11 @@ function loadErrorHandler(e) {
 
 loader
     .add('images/treasureHunter.json')
-    .add('images/narval_temp.png')
+    .add('images/narwhal_right.png')
     .add('images/tropic0.png')
+    .add('images/tropic2.png')
     .add('images/treasure.png')
+    .add('images/cat.png')
     .on('progress', loadProgressHandler)
     .on('complete', completeLoadingHandler)
     .on('error', loadErrorHandler)
@@ -65,7 +66,8 @@ function setup() {
   id = resources["images/treasureHunter.json"].textures;
 
   //Dungeon
-  let topic0 = new PIXI.Texture(resources["images/tropic0.png"].texture, new PIXI.Rectangle(10, 0, 840, 680));
+  // let topic0 = new PIXI.Texture(resources["images/tropic0.png"].texture, new PIXI.Rectangle(10, 0, 840, 680));
+  let topic0 = new PIXI.Texture(resources["images/tropic2.png"].texture, new PIXI.Rectangle(20, 20, 840, 680));
 
   dungeon = new Sprite(topic0);
 
@@ -85,10 +87,11 @@ function setup() {
   // gameScene.addChild(explorer);
 
   //Explorer
-  let char = new PIXI.Texture(resources["images/narval_temp.png"].texture, new PIXI.Rectangle(0, 0, 64, 64));
+  let char = new PIXI.Texture(resources["images/narwhal_right.png"].texture, new PIXI.Rectangle(0, 0, 64, 64));
   explorer = new Sprite(char);
-  explorer.x = 68;
+  explorer.x = 15;
   explorer.y = gameScene.height / 2 - explorer.height / 2;
+  explorer.y = 30;
   explorer.vx = 0;
   explorer.vy = 0;
   gameScene.addChild(explorer);
@@ -102,9 +105,9 @@ function setup() {
   gameScene.addChild(treasure);
 
   //Make the blobs
-  let numberOfBlobs = 6,
+  let numberOfBlobs = 16,
       spacing = 48,
-      xOffset = 150,
+      xOffset = 100,
       speed = 2,
       direction = 1;
 
@@ -115,7 +118,9 @@ function setup() {
   for (let i = 0; i < numberOfBlobs; i++) {
 
     //Make a blob
-    let blob = new Sprite(id["blob.png"]);
+    // let blob = new Sprite(id["cat.png"]);
+      let blobC = new PIXI.Texture(resources["images/cat.png"].texture, new PIXI.Rectangle(0, 0, 64, 64));
+      let blob = new Sprite(blobC);
 
     //Space each blob horizontally according to the `spacing` value.
     //`xOffset` determines the point from the left of the screen

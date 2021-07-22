@@ -10,21 +10,20 @@ function index() {
             </Head>
 
             <div className="container container-table">
-                <div className="col vertical-center-row">
-
-
-
+                <div className="col vertical-center-row mt-4">
                     <div className="row">
                         <div className="col-12 col-md-8">
                             <div className="card bg-primary shadow-soft border-light p-4">
                                 <div className="card-header border-bottom text-center">
                                     <span className="d-block">
-                                        <span className="display-1 font-weight-bold">
+                                        <span className="font-weight-bold">
                                             <span className="align-top font-medium">
                                                 <div className="text-center">
-                                                    <h1> <img src="images/products/beyond.png" width="64" height="64"/> Beyonder</h1>
+                                                    <h1>
+                                                        <img src="images/products/beyond.png" width="64" height="64" className="mb-4"/> Beyonder
+                                                    </h1>
                                                 </div>
-                                                <div className="w-75">
+                                                <div className="w-75 ml-5">
                                                     <div className="form-group mb-3">
                                                         <input type="text" className="form-control" id="name" aria-describedby="nameHelp"
                                                                placeholder="Your Name"/>

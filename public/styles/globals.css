@@ -1,7 +1,7 @@
-/*body {*/
-/*  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;*/
-/*  margin: 0;*/
-/*}*/
+body {
+  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
+  margin: 0;
+}
 
 h1 {
   padding: 1em;
@@ -14,4 +14,16 @@ canvas {
   margin: 0 auto;
   display: block;
 }
-
+/*body {*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*}*/
+/*#container {*/
+/*  position: relative;*/
+/*}*/
+/*#container canvas, #overlay {*/
+/*  position: absolute;*/
+/*}*/
+/*canvas {*/
+/*  border: 1px solid black;*/
+/*}*/
