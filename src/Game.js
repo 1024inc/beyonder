@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
+import Head from 'next/head';
+
 
 
 function useSocket(url) {
@@ -20,6 +22,7 @@ function useSocket(url) {
 
 const Game = () => {
     const socket = useSocket('http://localhost:4998')
+    // const socket = useSocket('http://10.128.0.17:4998')
     const [statsContainer, setStatsContainer] = useState('')
     const [ranking, setRanking] = useState('')
 
@@ -52,15 +55,22 @@ const Game = () => {
     const itemCount = useRef(null);
 
     return (
-        <div className='bg-primary container'>
-            <div className='row'>
-                <div id='app' className='mt-4 col-md-9 p-0' > </div>
-                <div className=' mt-4 col-md-3 p-0'>
-                    <div id='ranking' className='mt-4 col-md-3 p-0'> {ranking}</div>
-                    <div id='stats' className='mt-4 col-md-3 p-0' ref={itemCount}> 100 </div>
+        <div>
+            <Head>
+                <script type="module" src="/scripts/script.js" > </script>
+            </Head>
+            <div className='bg-primary container'>
+                <div className='row'>
+                    <div id='app' className='mt-4 col-md-9 p-0' > </div>
+                    <div className=' mt-4 col-md-3 p-0'>
+                        <div id='ranking' className='mt-4 col-md-3 p-0'> {ranking}</div>
+                        <div id='stats' className='mt-4 col-md-3 p-0' ref={itemCount}> 100 </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+
     );
 };
 

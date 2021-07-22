@@ -1,9 +1,7 @@
-/* CSS files add styling rules to your content */
-
-body {
-  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
-  margin: 0;
-}
+/*body {*/
+/*  font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;*/
+/*  margin: 0;*/
+/*}*/
 
 h1 {
   padding: 1em;
@@ -16,3 +14,4 @@ canvas {
   margin: 0 auto;
   display: block;
 }
+

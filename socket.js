@@ -1,6 +1,7 @@
 let interval;
 
 module.exports = io => {
+    console.log('*****sockets are imported');
     io.on('connect', (socket) => {
         console.log('User connected')
 

@@ -10,13 +10,10 @@ export default function index() {
           <title> Beyond runner </title>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="stylesheet" href="/styles/bootstrap.css" />
-          <link rel="stylesheet" href="/styles/neumorphism.css" />
-
       </Head>
 
       <main>
-          <App pageName="Home" />
+          <App pageName="Game" />
       </main>
 
       <footer></footer>

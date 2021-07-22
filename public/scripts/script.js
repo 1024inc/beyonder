@@ -1,5 +1,3 @@
-// import { setup }  from './setup.js';
-
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
