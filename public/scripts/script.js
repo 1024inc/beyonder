@@ -173,6 +173,11 @@ function setup() {
 
   //Create the `gameOver` scene
   gameOverScene = new Container();
+  var bg = new PIXI.Sprite(PIXI.Texture.WHITE);
+  bg.width = 840;
+  bg.height = 680;
+  bg.tint = 0xffffff;
+  gameOverScene.addChild(bg)
   app.stage.addChild(gameOverScene);
 
   //Make the `gameOver` scene invisible when the game first starts
@@ -182,7 +187,7 @@ function setup() {
   let style = new TextStyle({
     fontFamily: "Futura",
     fontSize: 64,
-    fill: "white"
+    fill: "#24CBD2"
   });
   message = new Text("The End!", style);
   message.x = 120;
@@ -324,7 +329,7 @@ function play(delta) {
   //is less than zero, end the game and display "You lost!"
   if (healthBar.outer.width < 0) {
     state = end;
-    message.text = "You lost!";
+    message.text = "Try again!";
   }
 
   //If the explorer has brought the treasure to the exit,
