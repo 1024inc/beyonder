@@ -13,7 +13,7 @@ $ npm run build
 $ npm run start
 # Start production next server without socket.io
 $ npm run next-start
-# Check for linking errors
+# Check for linting errors
 $ npm run lint
 
 # To run docker locally build docker image locally first or it will be pulled from gcp 
