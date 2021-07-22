@@ -2,6 +2,16 @@ import React from 'react';
 import Head from "next/head";
 import Link from "next/link";
 
+function validateFields() {
+  removeInvalidNameChars();
+}
+
+function removeInvalidNameChars() {
+  // Prevents users from typing numbers or special characers into the Name field
+  document.getElementById('name').value =
+    document.getElementById('name').value.replace(/[^a-zA-Z ]/g, '');
+}
+
 function index() {
     return (
         <div>
@@ -25,7 +35,7 @@ function index() {
                                                 </div>
                                                 <div className="w-75 ml-5">
                                                     <div className="form-group mb-3">
-                                                        <input type="text" className="form-control" id="name" aria-describedby="nameHelp"
+                                                        <input type="text" onChange={validateFields} className="form-control" id="name" aria-describedby="nameHelp"
                                                                placeholder="Your Name"/>
                                                     </div>
                                                     <div className="form-group mb-3">
