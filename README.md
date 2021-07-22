@@ -11,7 +11,7 @@ $ npm run next-dev
 $ npm run build
 # Start production express server with sockets.io
 $ npm run start
-# Start dev next server without socket.io
+# Start production next server without socket.io
 $ npm run next-start
 # Check for linking errors
 $ npm run lint
