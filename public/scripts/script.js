@@ -31,6 +31,7 @@ let insightsContainer = document.getElementById('i');
 let signalContainer = document.getElementById('s');
 let relayContainer = document.getElementById('r');
 let guidanceContainer = document.getElementById('g');
+let collectDescriptionContainer = document.getElementById('collect');
 appContainer.appendChild(app.view);
 app.view.setAttribute('tabindex', 0);
 
@@ -230,6 +231,7 @@ function startLevel(label) {
   explorer.vx = 0;
   explorer.vy = 0;
   gameScene.addChild(explorer);
+  collectDescriptionContainer.classList.remove("opacity-0");
 
   //Update Treasure, Blobs, Product Description
   if (label === products.Pricing.label) {
@@ -256,7 +258,6 @@ function startLevel(label) {
     updateProductInfo(products.Pricing.label);
     updateBlobs(products.Pricing.label);
   }
-
   //Make the blobs
 
 

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef, useContext} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from "next/head";
 import Link from "next/link";
 import io from "socket.io-client";
-import  { ConfigContext } from "./App";
 
 function validateFields() {
   removeInvalidNameChars();
@@ -14,11 +13,26 @@ function removeInvalidNameChars() {
     document.getElementById('name').value.replace(/[^a-zA-Z ]/g, '');
 }
 
-function Home({login}) {
+function useSocket(url) {
+    const [socket, setSocket] = useState(null);
+
+    useEffect(() => {
+        const socketIo = io(url);
+        setSocket(socketIo);
+        function cleanup() {
+            socketIo.disconnect();
+        }
+        return cleanup;
+    }, []);
+    return socket;
+}
+
+
+function Home1() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    // const context = useContext(ConfigContext);
-
+    const socket = useSocket('http://localhost:4998')
+    // const socket = useSocket('http://10.128.0.17:4998')
       useEffect(() => {
         validateFields()
         setName(name)
@@ -28,6 +42,24 @@ function Home({login}) {
         setEmail(email);
       }, [email])
 
+
+    // const sendUserLogin = useEffect(() => {
+    //     const userLogin = {"name": name, "email":email};
+    //     if (socket) {
+    //         console.log('client -> server', userLogin )
+    //         socket.emit('login', userLogin)
+    //     }
+    // }, [socket, name, email])
+
+    // sendUserLogin();
+
+    function sendUserLogin() {
+        const userLogin = {"name": name, "email":email};
+        if (socket) {
+            console.log('client -> server', userLogin )
+            socket.emit('login', userLogin)
+        }
+    }
 
     return (
         <div>
@@ -147,7 +179,7 @@ function Home({login}) {
                                     </label>
                                 </div>
                                 <Link href="/game">
-                                    <button id="lets-play" onClick={() => login(name, email)} type="button" className="btn btn-primary btn-block">
+                                    <button id="lets-play" onClick={() => sendUserLogin} type="button" className="btn btn-primary btn-block">
                                         <span className="fas fa-cart-plus mr-3">
                                             Let's Play
                                         </span>
@@ -163,4 +195,4 @@ function Home({login}) {
     )
 }
 
-export default Home;
+export default Home1;
