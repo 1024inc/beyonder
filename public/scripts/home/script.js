@@ -144,7 +144,6 @@
 //
 // function MakeWaves(x, y, i) {
 //
-//   console.log(ripples)
 //   ripples[i].position.set(x, y);
 //   runTweens(ripples[i], filters[i + 1]);
 // }

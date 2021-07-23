@@ -20,14 +20,18 @@ const app = new PIXI.Application({
 });
 
 let appContainer = document.getElementById('app');
-let statsContainer = document.getElementById('stats');
 let productImageContainer = document.getElementsByClassName('product-image');
 let productDescriptionContainer = document.getElementById('product-description');
 let productLabelContainer = document.getElementById('product-label');
+let productCreditContainer = document.getElementById('product-credit');
 let blobContainer = document.getElementById('blob-icon');
 let blobDescriptionContainer = document.getElementById('blob-description');
+let pricingContainer = document.getElementById('p');
+let insightsContainer = document.getElementById('i');
+let signalContainer = document.getElementById('s');
+let relayContainer = document.getElementById('r');
+let guidanceContainer = document.getElementById('g');
 appContainer.appendChild(app.view);
-// statsContainer.appendChild(stats.view);
 app.view.setAttribute('tabindex', 0);
 
 
@@ -47,7 +51,7 @@ function loadErrorHandler(e) {
 function updateProductInfo(type) {
   productDescriptionContainer.innerHTML = products[type].description;
   productLabelContainer.innerHTML = products[type].label;
-  blobContainer.innerHTML = `<img src=${products[type].blobIcon} width="64" height="64"/>`;
+  blobContainer.innerHTML = `<img src=${products[type].blobIcon} width="32" height="32"/>`;
   blobDescriptionContainer.innerHTML = products[type].blobLabel;
   for (let e of productImageContainer) {
     e.innerHTML = `<img src=${products[type].imageIcon} width="64" height="64"/>`;
@@ -83,8 +87,10 @@ function updateBlobs(type) {
   for (let i = 0; i < numberOfBlobs; i++) {
 
     //Make a blob
-    let blobC = new PIXI.Texture(resources[imageIcon].texture, new PIXI.Rectangle(0, 0, 64, 64));
+    let blobC = new PIXI.Texture(resources[imageIcon].texture, new PIXI.Rectangle(0, 0, 150, 150));
     let blob = new Sprite(blobC);
+    blob.width = 64;
+    blob.height = 64;
 
     //Space each blob horizontally according to the `spacing` value.
     //`xOffset` determines the point from the left of the screen
@@ -137,57 +143,58 @@ loader
     .add('images/products/relay_64.png')
     .add('images/products/signal_64.png')
     .add('images/blobs/guidance_64.png')
-    .add('images/blobs/insights_64.png')
-    .add('images/blobs/pricing_64.png')
-    .add('images/blobs/relay_64.png')
-    .add('images/blobs/signal_64.png')
-    .add('images/cat.png')
+    .add('images/blobs/low_bookings.svg')
+    .add('images/blobs/low_occupancy.svg')
+    .add('images/blobs/double_bookings.svg')
+    .add('images/blobs/bad_guests.svg')
+    .add('images/title_screen.png')
     .on('progress', loadProgressHandler)
     .on('complete', completeLoadingHandler)
     .on('error', loadErrorHandler)
     .load(setup);
-// .load((loader, resources) => setup(app, statsContainer, loader, resources));
 
-let state, explorer, treasure, blobs, chimes, exit, player,
+let state, explorer, treasure, blobs, exit, player,
     sPricing, sInsights, sSignal, sRelay, sGuidance,
-    exitDoor, healthBar, message, gameScene, gameOverScene, enemies, id,
+    exitDoor, healthBar, message, gameScene, gameOverScene, id,
     mapPricing, mapInsights, mapSignal, mapRelay, mapGuidance,
-    currentState, productDescription;
+    currentState, productDescription, sCoverTitle;
 
+let beyondCreditsTotal=0;
+let beyondCreditsThisRound=0;
 let products = {
   Pricing: {
     description: 'Dynamic & Demand-Driven Pricing: The tool you need to maximize revenue and drive occupancy',
     imageIcon: 'images/products/pricing.png',
     level: 1,
     label: 'Pricing',
-    blobIcon: 'images/blobs/pricing_64.png',
+    blobIcon: 'images/blobs/low_bookings.svg',
     blobLabel: 'low bookings',
-    blobConfig: {count:8, spacing: 48, speed: 1, xOffset: 100, direction:1 },
+    blobConfig: {count:12, spacing: 48, speed: 2, xOffset: 100, direction:1 },
   },
   Insights: {
     description: 'Insights: Free performance metrics for your entire portfolio',
     imageIcon: 'images/products/insights.png',
     level: 2,
     label: 'Insights',
-    blobIcon: 'images/blobs/insights_64.png',
+    blobIcon: 'images/blobs/low_occupancy.svg',
     blobLabel: 'low occupancy',
-    blobConfig: {count:12, spacing: 48, speed: 1, xOffset: 100, direction:1 },
+    blobConfig: {count:12, spacing: 48, speed: 2, xOffset: 100, direction:2 },
   },
   Relay: {
     description: 'Relay: Automatically sync your listings across OTAs',
     imageIcon: 'images/products/relay.png',
     level: 3,
     label: 'Relay',
-    blobIcon: 'images/blobs/relay_64.png',
+    blobIcon: 'images/blobs/double_bookings.svg',
     blobLabel: 'low double bookings',
-    blobConfig: {count:15, spacing: 48, speed: 2, xOffset: 100, direction:1 },
+    blobConfig: {count:15, spacing: 48, speed: 3, xOffset: 100, direction:1 },
   },
   Signal:{
     description: 'Signal: Direct Booking Engine & Website with No Upfront Costs',
     imageIcon: 'images/products/signal.png',
     level: 4,
     label: 'Signal',
-    blobIcon: 'images/blobs/signal_64.png',
+    blobIcon: 'images/blobs/bad_guests.svg',
     blobLabel: 'bad guests',
     blobConfig: {count:15, spacing: 48, speed: 3, xOffset: 100, direction:1 },
   },
@@ -198,11 +205,17 @@ let products = {
     label: 'Guidance',
     blobIcon: 'images/blobs/guidance_64.png',
     blobLabel: 'low revenue',
-    blobConfig: {count:15, spacing: 48, speed: 4, xOffset: 100, direction:1 },
+    blobConfig: {count:15, spacing: 48, speed: 5, xOffset: 100, direction:1 },
   },
 }
 
 function startLevel(label) {
+  //beyond Credits
+  beyondCreditsTotal += beyondCreditsThisRound;
+  productCreditContainer.innerHTML = beyondCreditsTotal;
+  beyondCreditsThisRound = 0;
+
+
   //exitDoor
   exitDoor = new PIXI.Text('EXIT',{fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'});
   exitDoor.position.set(32, 32);
@@ -368,15 +381,11 @@ function startLevel(label) {
   state = play;
 }
 
-function setup() {
-  //Make the game scene and add it to the stage
-  gameScene = new Container();
-  app.stage.addChild(gameScene);
+function startGame() {
 
   //Make the sprites and add them to the `gameScene`
   //Create an alias for the texture atlas frame ids
   id = resources["images/treasureHunter.json"].textures;
-
   //Dungeon
   mapPricing = new PIXI.Texture(resources["images/beach_theme.png"].texture, new PIXI.Rectangle(0, 0, 840, 680));
   mapInsights = new PIXI.Texture(resources["images/cabin_theme.png"].texture, new PIXI.Rectangle(0, 0, 840, 680));
@@ -384,7 +393,7 @@ function setup() {
   mapRelay = new PIXI.Texture(resources["images/cabin_theme.png"].texture, new PIXI.Rectangle(0, 0, 840, 680));
   mapGuidance = new PIXI.Texture(resources["images/beach_theme.png"].texture, new PIXI.Rectangle(0, 0, 840, 680));
 
-  currentState = 'pricing';
+  currentState = products.Pricing.label;
   sPricing = new Sprite(mapPricing);
   sInsights = new Sprite(mapInsights);
   sSignal = new Sprite(mapSignal);
@@ -394,8 +403,27 @@ function setup() {
   gameScene.addChild(sPricing);
 
   startLevel(products.Pricing.label)
+   sCoverTitle.interactive = false;
   //Start the game loop
   app.ticker.add(delta => gameLoop(delta));
+}
+
+
+
+function setup() {
+  //Make the game scene and add it to the stage
+  //Cover map
+  let cover= new PIXI.Texture(resources["images/title_screen.png"].texture, new PIXI.Rectangle(0, 0, 840, 680));
+  sCoverTitle = new Sprite(cover);
+  gameScene = new Container();
+  app.stage.addChild(gameScene);
+  gameScene.addChild(sCoverTitle);
+  sCoverTitle.interactive = true;
+  sCoverTitle.on('mousedown', startGame);
+  sCoverTitle.on('touchstart', startGame);
+  beyondCreditsTotal=0;
+  beyondCreditsThisRound=0;
+  productCreditContainer.innerHTML = beyondCreditsTotal;
 }
 
 
@@ -403,6 +431,13 @@ function gameLoop(delta){
 
   //Update the current game state:
   state(delta);
+}
+
+function onDown () {
+  gameScene.removeChildren()
+  start()
+  startLevel(products.Pricing.label)
+  state = play
 }
 
 function play(delta) {
@@ -458,7 +493,8 @@ function play(delta) {
 
   //Check for a collision between the explorer and the treasure
   if (hitTestRectangle(explorer, treasure)) {
-
+    beyondCreditsThisRound = 5;
+    console.log(beyondCreditsThisRound)
     //If the treasure is touching the explorer, center it over the explorer
     treasure.x = explorer.x + 8;
     treasure.y = explorer.y + 8;
@@ -467,22 +503,21 @@ function play(delta) {
   //Does the explorer have enough health? If the width of the `innerBar`
   //is less than zero, end the game and display "You lost!"
   if (healthBar.outer.width < 0) {
-    restartGame()
     state = end;
     message.text = "Try again!";
     message.interactive = true;
     message.on('mousedown', onDown);
     message.on('touchstart', onDown);
-
-
-    function onDown (eventData) {
-      console.log("heelo")
-      start()
-      startLevel(products.Pricing.label)
-      state = play
-    }
+    currentState = '';
+    beyondCreditsTotal=0;
+    beyondCreditsThisRound=0;
+    productCreditContainer.innerHTML = beyondCreditsTotal;
+    pricingContainer.classList.add("opacity-3");
+    insightsContainer.classList.add("opacity-3");
+    signalContainer.classList.add("opacity-3");
+    relayContainer.classList.add("opacity-3");
+    guidanceContainer.classList.add("opacity-3");
   }
-
 
 
   //If the explorer has brought the treasure to the exit,
@@ -491,24 +526,38 @@ function play(delta) {
     if (currentState === products.Pricing.label) {
       currentState = products.Insights.label;
       gameScene.addChild(sInsights);
+      pricingContainer.classList.remove("opacity-3");
       startLevel(products.Insights.label)
     } else if (currentState === products.Insights.label) {
       gameScene.addChild(sSignal);
       currentState = products.Signal.label;
+      insightsContainer.classList.remove("opacity-3");
       startLevel(products.Signal.label)
     } else if (currentState === products.Signal.label) {
       gameScene.addChild(sRelay);
       currentState = products.Relay.label;
+      signalContainer.classList.remove("opacity-3");
       startLevel(products.Relay.label)
     } else if (currentState === products.Relay.label) {
       gameScene.addChild(sGuidance);
       currentState = products.Guidance.label;
+      relayContainer.classList.remove("opacity-3");
       startLevel(products.Guidance.label)
     } else if (currentState === products.Guidance.label) {
+      productCreditContainer.innerHTML = beyondCreditsTotal +5;
+      guidanceContainer.classList.remove("opacity-3");
       message.text = "You won!";
-      currentState = products.Pricing.label;
+      state = end
+      // message.interactive = true;
+      // message.on('mousedown', onDown);
+      // message.on('touchstart', onDown);
+      // currentState = ''
     } else {
+      beyondCreditsTotal=0;
+      beyondCreditsThisRound=0;
       currentState = products.Pricing.label;
+      gameScene.addChild(sPricing);
+      startLevel(products.Pricing.label)
     }
   }
 }

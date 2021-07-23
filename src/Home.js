@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from "next/head";
 import Link from "next/link";
+import io from "socket.io-client";
 
 function validateFields() {
   removeInvalidNameChars();
@@ -12,7 +13,46 @@ function removeInvalidNameChars() {
     document.getElementById('name').value.replace(/[^a-zA-Z ]/g, '');
 }
 
-function index() {
+function useSocket(url) {
+    const [socket, setSocket] = useState(null);
+
+    useEffect(() => {
+        const socketIo = io(url);
+        setSocket(socketIo);
+        function cleanup() {
+            socketIo.disconnect();
+        }
+        return cleanup;
+    }, []);
+    return socket;
+}
+
+
+function Home() {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const socket = useSocket('http://localhost:4998')
+    // const socket = useSocket('http://10.128.0.17:4998')
+      useEffect(() => {
+        validateFields()
+        setName(name)
+      }, [name])
+
+      useEffect(() => {
+        setEmail(email);
+      }, [email])
+
+
+    const sendUserLogin = useEffect(() => {
+        const userLogin = {"name": name, "email":email};
+        if (socket) {
+            console.log('message to server', userLogin )
+            socket.emit('login', userLogin)
+        }
+    }, [socket, name, email])
+
+    // sendUserLogin();
+
     return (
         <div>
             <Head>
@@ -29,17 +69,15 @@ function index() {
                                         <span className="font-weight-bold">
                                             <span className="align-top font-medium">
                                                 <div className="text-center">
-                                                    <h1>
-                                                        <img src="images/products/beyond.png" width="64" height="64" className="mb-4"/> Beyonder
-                                                    </h1>
+                                                        <img src="images/title_front.png" className="mb-4"/>
                                                 </div>
                                                 <div className="w-75 ml-5">
                                                     <div className="form-group mb-3">
-                                                        <input type="text" onChange={validateFields} className="form-control" id="name" aria-describedby="nameHelp"
+                                                        <input type="text" onChange={(e) => {setName(e.target.value)}} className="form-control" id="name" aria-describedby="nameHelp" value={name}
                                                                placeholder="Your Name"/>
                                                     </div>
                                                     <div className="form-group mb-3">
-                                                        <input type="email" className="form-control" id="email" aria-describedby="emailHelp"
+                                                        <input type="email" onChange={(e) => {setEmail(e.target.value)}} className="form-control" id="email" aria-describedby="emailHelp" value={email}
                                                                placeholder="Your email"/>
                                                     </div>
                                                 </div>
@@ -52,10 +90,10 @@ function index() {
                                         <span className="font-weight-bold">
                                             <span className="align-top font-medium">
                                                 Use
-                                                <button type="submit" className="btn btn-primary m-2">&#5130;</button>
-                                                <button type="submit" className="btn btn-primary m-2">&#5123;</button>
-                                                <button type="submit" className="btn btn-primary m-2">&#5125;</button>
-                                                <button type="submit" className="btn btn-primary m-2">&#5121;</button>
+                                                <span className="m-2">&#5130;</span>
+                                                <span className="m-2">&#5123;</span>
+                                                <span className="m-2">&#5125;</span>
+                                                <span className="m-2">&#5121;</span>
                                                 keyboard keys to navigate
                                             </span>
                                         </span>
@@ -65,11 +103,11 @@ function index() {
                                 <div className="card-header border-bottom text-center">
                                     <span className="d-block">
                                         <span className="font-weight-bold">
-                                            <span className="align-top font-medium">Collect Beyond Items and get 50 bonus points</span>
+                                            <span className="align-top font-medium">Collect Beyond Items and get $25 Beyond Credits</span>
                                         </span>
                                     </span>
                                     <div className="row">
-                                        <button type="submit" className="btn btn-primary m-2">
+                                        <button type="submit" className="btn btn-primary m-2 ml-5">
                                             <a href="https://www.beyondpricing.com/products/insights">
                                                 <img src="images/products/insights.png" width="64" height="64"/>
                                             </a>
@@ -103,17 +141,25 @@ function index() {
                                         </span>
                                     </span>
                                     <div className="row">
-                                        <button type="submit" className="btn btn-primary m-2">
-                                            <img src="images/cat.png" width="64" height="64"/>
+                                        <button type="submit" className="btn btn-primary m-2 ml-6" data-toggle="tooltip" data-placement="bottom">
+                                            <img src="images/blobs/low_occupancy.svg" width="64" height="64" className="mr-1"/>
+                                            Low occupancy
                                         </button>
-                                        <button type="submit" className="btn btn-primary m-2">
-                                            <img src="images/blob.png" width="64" height="64"/>
+                                        <button type="submit" className="btn btn-primary m-2" data-toggle="tooltip" data-placement="bottom">
+                                            <img src="images/blobs/double_bookings.svg" width="64" height="64" className="mr-1"/>
+                                            Double bookings
                                         </button>
-                                        <button type="submit" className="btn btn-primary m-2">
-                                            <img src="images/animals.png" width="150" height="64"/>
+                                        <button type="submit" className="btn btn-primary m-2" data-toggle="tooltip" data-placement="bottom">
+                                            <img src="images/blobs/bad_guests.svg" width="64" height="64" className="mr-1"/>
+                                            Bad guests
                                         </button>
-                                        <button type="submit" className="btn btn-primary m-2">
-                                            <img src="images/door.png" width="64" height="64"/>
+                                        <button type="submit" className="btn btn-primary m-2" data-toggle="tooltip" data-placement="bottom">
+                                            <img src="images/blobs/low_bookings.svg" width="64" height="64" className="mr-1"/>
+                                            Low bookings
+                                        </button>
+                                        <button type="submit" className="btn btn-primary m-2" data-toggle="tooltip" data-placement="bottom">
+                                            <img src="images/blobs/guidance_64.png" width="64" height="64" className="mr-1"/>
+                                            Low revenue
                                         </button>
                                     </div>
                                 </div>
@@ -125,7 +171,7 @@ function index() {
                                     </label>
                                 </div>
                                 <Link href="/game">
-                                    <button type="button" className="btn btn-primary btn-block">
+                                    <button id="lets-play" onClick={() => sendUserLogin} type="button" className="btn btn-primary btn-block">
                                         <span className="fas fa-cart-plus mr-3">
                                             Let's Play
                                         </span>
@@ -135,12 +181,10 @@ function index() {
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
     )
 }
 
-export default index;
+export default Home;

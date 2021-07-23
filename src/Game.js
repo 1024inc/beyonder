@@ -21,7 +21,7 @@ function useSocket(url) {
 
 
 const Game = () => {
-      const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
       setMounted(true)
   }, [])
@@ -74,8 +74,8 @@ const Game = () => {
                         <span className="product-image"></span>
                         <span id="product-label"></span> Icon
                         and avoid
-                        <span id="blob-description"></span>
-                        <span id="blob-icon"></span>
+                         <span id="blob-description" className=" ml-1"> </span>
+                        <span id="blob-icon" className="mx-2"></span>
                         Icon
                     </h4>
 
@@ -92,7 +92,21 @@ const Game = () => {
                             <div className="card-body shadow-soft border border-light rounded p-4">
                                 <div className="row">
                                     <div className='p-0'>
-                                         <div id='ranking' className='card-header border-bottom text-center p-0'>
+                                        <div id='stats' className='card-header text-center px-0 pt-0' ref={itemCount}>
+                                            <h5>Your stats </h5>
+                                            Credits:
+                                            $
+                                            <span id="product-credit" className="mx-1"></span>
+                                            out of 25
+                                            <div className="mt-2">
+                                                <img src='images/products/pricing_64.png' id='p' className="opacity-3" width="32" height="32"/>
+                                                <img src='images/products/insights_64.png'id='i' className="opacity-3" width="32" height="32"/>
+                                                <img src='images/products/signal_64.png'id='s' className="opacity-3" width="32" height="32"/>
+                                                <img src='images/products/relay_64.png'id='r' className="opacity-3" width="32" height="32"/>
+                                                <img src='images/products/guidance_64.png' id='g' className="opacity-3" width="32" height="32"/>
+                                            </div>
+                                         </div>
+                                         <div id='ranking' className='card-header border-top text-center px-0'>
                                              <h5>Top Ten Players ({numberOfPlayers})</h5>
                                              <div>1. <span>Alice</span> - {ranking}</div>
                                              <div>2. <span>Bob</span> - {ranking}</div>
@@ -105,21 +119,13 @@ const Game = () => {
                                              <div>1. <span>Alice</span> - {ranking}</div>
                                              <div>2. <span>Bob</span> - {ranking}</div>
                                         </div>
-                                        <div id='stats' className='card-header text-center px-0' ref={itemCount}>
-                                            <h5>Your stats </h5>
-                                            Beyond Credits:
-                                            $ {playerBCBalance}
-                                            <span className="product-level"></span>
-                                            out of 5
-                                            <img src='images/products/pricing_64.png' width="32" height="32"/>
-                                            <img src='images/products/insights_64.png' width="32" height="32"/>
-                                            <img src='images/products/relay_64.png' width="32" height="32"/>
-                                            <img src='images/products/signal_64.png' width="32" height="32"/>
-                                            <img src='images/products/guidance_64.png' width="32" height="32"/>
-                                            <div>100</div>
-                                         </div>
-                                        <div id='numberOfPlayers' className='card-header border-top text-center px-0'>
-                                             <h5>Share The Game</h5>
+                                        <div className='card-header border-top text-center px-0 pb-0 ml-3'>
+                                            <h5>Share</h5>
+                                            <img src='images/social/icons8-facebook-48.png' width="32" height="32"/>
+                                            <img src='images/social/icons8-instagram-48.png' width="32" height="32"/>
+                                            <img src='images/social/icons8-pinterest-48.png' width="32" height="32"/>
+                                            <img src='images/social/icons8-twitter-48.png' width="32" height="32"/>
+                                            <img src='images/social/icons8-tiktok-48.png' width="32" height="32"/>
                                         </div>
                                      </div>
                                 </div>
