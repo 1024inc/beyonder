@@ -23,8 +23,8 @@ function useSocket(url) {
 const Game = () => {
     const context = useContext(ConfigContext);
     const [mounted, setMounted] = useState(false);
-    const socket = useSocket('http://localhost:4998')
-    // const socket = useSocket('http://10.128.0.17:4998')
+    // const socket = useSocket('http://localhost:4998')
+    const socket = useSocket('http://10.128.0.17:4998')
     const [statsContainer, setStatsContainer] = useState('')
     const [ranking, setRanking] = useState('')
     const [users, setUsers] = useState([]);
