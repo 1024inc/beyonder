@@ -21,9 +21,15 @@ const app = new PIXI.Application({
 
 let appContainer = document.getElementById('app');
 let statsContainer = document.getElementById('stats');
+let productImageContainer = document.getElementsByClassName('product-image');
+let productDescriptionContainer = document.getElementById('product-description');
+let productLabelContainer = document.getElementById('product-label');
+let blobContainer = document.getElementById('blob-icon');
+let blobDescriptionContainer = document.getElementById('blob-description');
 appContainer.appendChild(app.view);
 // statsContainer.appendChild(stats.view);
 app.view.setAttribute('tabindex', 0);
+
 
 function loadProgressHandler(e) {
   console.log('Loading', e.progress);
@@ -37,79 +43,38 @@ function loadErrorHandler(e) {
   console.error('Error ' + e.message);
 }
 
+//Product Description
+function updateProductInfo(type) {
+  productDescriptionContainer.innerHTML = products[type].description;
+  productLabelContainer.innerHTML = products[type].label;
+  blobContainer.innerHTML = `<img src=${products[type].blobIcon} width="64" height="64"/>`;
+  blobDescriptionContainer.innerHTML = products[type].blobLabel;
+  for (let e of productImageContainer) {
+    e.innerHTML = `<img src=${products[type].imageIcon} width="64" height="64"/>`;
+  }
+}
 
-loader
-    .add('images/treasureHunter.json')
-    .add('images/narwhal_right.png')
-    .add('images/tropic0.png')
-    .add('images/tropic2.png')
-    .add('images/treasure.png')
-    .add('images/cat.png')
-    .on('progress', loadProgressHandler)
-    .on('complete', completeLoadingHandler)
-    .on('error', loadErrorHandler)
-    .load(setup);
-// .load((loader, resources) => setup(app, statsContainer, loader, resources));
-
-let state, explorer, treasure, blobs, chimes, exit, player, dungeon,
-    door, healthBar, message, gameScene, gameOverScene, enemies, id;
-
-function setup() {
-// function setup(app, statsContainer, loader, resources) {
-
-  //Make the game scene and add it to the stage
-  gameScene = new Container();
-  app.stage.addChild(gameScene);
-
-  //Make the sprites and add them to the `gameScene`
-  //Create an alias for the texture atlas frame ids
-  id = resources["images/treasureHunter.json"].textures;
-
-  //Dungeon
-  // let topic0 = new PIXI.Texture(resources["images/tropic0.png"].texture, new PIXI.Rectangle(10, 0, 840, 680));
-  let topic0 = new PIXI.Texture(resources["images/tropic2.png"].texture, new PIXI.Rectangle(20, 20, 840, 680));
-
-  dungeon = new Sprite(topic0);
-
-  gameScene.addChild(dungeon);
-
-  //Door
-  door = new Sprite(id["door.png"]);
-  door.position.set(32, 0);
-  gameScene.addChild(door);
-
-  //Explorer
-  // explorer = new Sprite(id["blob.png"]);
-  // explorer.x = 68;
-  // explorer.y = gameScene.height / 2 - explorer.height / 2;
-  // explorer.vx = 0;
-  // explorer.vy = 0;
-  // gameScene.addChild(explorer);
-
-  //Explorer
-  let char = new PIXI.Texture(resources["images/narwhal_right.png"].texture, new PIXI.Rectangle(0, 0, 64, 64));
-  explorer = new Sprite(char);
-  explorer.x = 15;
-  explorer.y = gameScene.height / 2 - explorer.height / 2;
-  explorer.y = 30;
-  explorer.vx = 0;
-  explorer.vy = 0;
-  gameScene.addChild(explorer);
-
-  //Treasure
-  let treasureTexture = new PIXI.Texture(resources["images/treasure.png"].texture, new PIXI.Rectangle(0, 0, 32, 32));
-  treasure = new Sprite(treasureTexture);
-
-  treasure.x = gameScene.width - treasure.width - 48;
+//Treasure
+function updateTreasure(type){
+  let imageIcon = products[type].imageIcon.split('.');
+  let image64Icon = `${imageIcon[0]}_64.${imageIcon[1]}`
+  let iconTexture = new PIXI.Texture(resources[image64Icon].texture, new PIXI.Rectangle(0, 0, 64, 64));
+  treasure = new Sprite(iconTexture);
+  treasure.x = gameScene.width - treasure.width - 26;
   treasure.y = gameScene.height / 2 - treasure.height / 2;
   gameScene.addChild(treasure);
+}
 
-  //Make the blobs
-  let numberOfBlobs = 16,
-      spacing = 48,
-      xOffset = 100,
-      speed = 2,
-      direction = 1;
+//Blobs
+function updateBlobs(type) {
+  let imageIcon = products[type].blobIcon;
+  // let image64Icon = `${imageIcon[0]}_64.${imageIcon[1]}`
+
+  let numberOfBlobs = products[type].blobConfig.count,
+      spacing = products[type].blobConfig.spacing,
+      xOffset = products[type].blobConfig.xOffset,
+      speed = products[type].blobConfig.speed,
+      direction = products[type].blobConfig.direction
 
   //An array to store all the blob monsters
   blobs = [];
@@ -118,9 +83,8 @@ function setup() {
   for (let i = 0; i < numberOfBlobs; i++) {
 
     //Make a blob
-    // let blob = new Sprite(id["cat.png"]);
-      let blobC = new PIXI.Texture(resources["images/cat.png"].texture, new PIXI.Rectangle(0, 0, 64, 64));
-      let blob = new Sprite(blobC);
+    let blobC = new PIXI.Texture(resources[imageIcon].texture, new PIXI.Rectangle(0, 0, 64, 64));
+    let blob = new Sprite(blobC);
 
     //Space each blob horizontally according to the `spacing` value.
     //`xOffset` determines the point from the left of the screen
@@ -149,6 +113,139 @@ function setup() {
     //Add the blob to the `gameScene`
     gameScene.addChild(blob);
   }
+}
+
+// Restart Game
+// function restartGame() {
+//   let iconTexture = new PIXI.Texture(resources['images/reload_64.gif'].texture, new PIXI.Rectangle(0, 0, 64, 64));
+//   let sReload = new Sprite(iconTexture);
+//   gameOverScene.addChild(sReload);
+// }
+
+
+loader
+    .add('images/treasureHunter.json')
+    .add('images/narwhal_right.png')
+    .add('images/tropic0.png')
+    .add('images/tropic2.png')
+    .add('images/beach_theme.png')
+    .add('images/cabin_theme.png')
+    .add('images/treasure.png')
+    .add('images/products/guidance_64.png')
+    .add('images/products/insights_64.png')
+    .add('images/products/pricing_64.png')
+    .add('images/products/relay_64.png')
+    .add('images/products/signal_64.png')
+    .add('images/blobs/guidance_64.png')
+    .add('images/blobs/insights_64.png')
+    .add('images/blobs/pricing_64.png')
+    .add('images/blobs/relay_64.png')
+    .add('images/blobs/signal_64.png')
+    .add('images/cat.png')
+    .on('progress', loadProgressHandler)
+    .on('complete', completeLoadingHandler)
+    .on('error', loadErrorHandler)
+    .load(setup);
+// .load((loader, resources) => setup(app, statsContainer, loader, resources));
+
+let state, explorer, treasure, blobs, chimes, exit, player,
+    sPricing, sInsights, sSignal, sRelay, sGuidance,
+    exitDoor, healthBar, message, gameScene, gameOverScene, enemies, id,
+    mapPricing, mapInsights, mapSignal, mapRelay, mapGuidance,
+    currentState, productDescription;
+
+let products = {
+  Pricing: {
+    description: 'Dynamic & Demand-Driven Pricing: The tool you need to maximize revenue and drive occupancy',
+    imageIcon: 'images/products/pricing.png',
+    level: 1,
+    label: 'Pricing',
+    blobIcon: 'images/blobs/pricing_64.png',
+    blobLabel: 'low bookings',
+    blobConfig: {count:8, spacing: 48, speed: 1, xOffset: 100, direction:1 },
+  },
+  Insights: {
+    description: 'Insights: Free performance metrics for your entire portfolio',
+    imageIcon: 'images/products/insights.png',
+    level: 2,
+    label: 'Insights',
+    blobIcon: 'images/blobs/insights_64.png',
+    blobLabel: 'low occupancy',
+    blobConfig: {count:12, spacing: 48, speed: 1, xOffset: 100, direction:1 },
+  },
+  Relay: {
+    description: 'Relay: Automatically sync your listings across OTAs',
+    imageIcon: 'images/products/relay.png',
+    level: 3,
+    label: 'Relay',
+    blobIcon: 'images/blobs/relay_64.png',
+    blobLabel: 'low double bookings',
+    blobConfig: {count:15, spacing: 48, speed: 2, xOffset: 100, direction:1 },
+  },
+  Signal:{
+    description: 'Signal: Direct Booking Engine & Website with No Upfront Costs',
+    imageIcon: 'images/products/signal.png',
+    level: 4,
+    label: 'Signal',
+    blobIcon: 'images/blobs/signal_64.png',
+    blobLabel: 'bad guests',
+    blobConfig: {count:15, spacing: 48, speed: 3, xOffset: 100, direction:1 },
+  },
+  Guidance: {
+    description: 'Guidance: Personalized revenue management by local market experts',
+    imageIcon: 'images/products/guidance.png',
+    level: 5,
+    label: 'Guidance',
+    blobIcon: 'images/blobs/guidance_64.png',
+    blobLabel: 'low revenue',
+    blobConfig: {count:15, spacing: 48, speed: 4, xOffset: 100, direction:1 },
+  },
+}
+
+function startLevel(label) {
+  //exitDoor
+  exitDoor = new PIXI.Text('EXIT',{fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'});
+  exitDoor.position.set(32, 32);
+  gameScene.addChild(exitDoor);
+
+  //Explorer
+  let char = new PIXI.Texture(resources["images/narwhal_right.png"].texture, new PIXI.Rectangle(0, 0, 64, 64));
+  explorer = new Sprite(char);
+  explorer.x = 15;
+  explorer.y = gameScene.height / 2 - explorer.height / 2;
+  explorer.y = 50;
+  explorer.vx = 0;
+  explorer.vy = 0;
+  gameScene.addChild(explorer);
+
+  //Update Treasure, Blobs, Product Description
+  if (label === products.Pricing.label) {
+    updateProductInfo(products.Pricing.label);
+    updateTreasure(products.Pricing.label);
+    updateBlobs(products.Pricing.label);
+  } else if (label === products.Insights.label) {
+    updateProductInfo(products.Insights.label);
+    updateTreasure(products.Insights.label);
+    updateBlobs(products.Insights.label);
+  } else if (label === products.Relay.label) {
+    updateProductInfo(products.Relay.label);
+    updateTreasure(products.Relay.label);
+    updateBlobs(products.Relay.label);
+  } else if (label === products.Signal.label) {
+    updateProductInfo(products.Signal.label);
+    updateTreasure(products.Signal.label);
+    updateBlobs(products.Signal.label);
+  } else if (label === products.Guidance.label) {
+    updateProductInfo(products.Guidance.label);
+    updateTreasure(products.Guidance.label);
+    updateBlobs(products.Guidance.label);
+  } else {
+    updateProductInfo(products.Pricing.label);
+    updateBlobs(products.Pricing.label);
+  }
+
+  //Make the blobs
+
 
   //Create the health bar
   healthBar = new Container();
@@ -181,10 +278,10 @@ function setup() {
   gameOverScene.addChild(bg);
 
   /**
-  * Order of operations matters for rendering objects in Pixi.  e.g. if this code block
-  * precedes the `bg` related codeblock above, our `narwhalSprite` is not visible
-  * TODO: Determine if there is a z-index equivalent to use.
-  */
+   * Order of operations matters for rendering objects in Pixi.  e.g. if this code block
+   * precedes the `bg` related codeblock above, our `narwhalSprite` is not visible
+   * TODO: Determine if there is a z-index equivalent to use.
+   */
   var narwhalLoserAnimationTexture = new PIXI.Texture(resources["images/narwhal_right.png"].texture, new PIXI.Rectangle(0, 0, 64, 64));
   var narwhalSprite = new PIXI.Sprite(narwhalLoserAnimationTexture);
   narwhalSprite.width = 512;
@@ -269,7 +366,34 @@ function setup() {
 
   //Set the game state
   state = play;
+}
 
+function setup() {
+  //Make the game scene and add it to the stage
+  gameScene = new Container();
+  app.stage.addChild(gameScene);
+
+  //Make the sprites and add them to the `gameScene`
+  //Create an alias for the texture atlas frame ids
+  id = resources["images/treasureHunter.json"].textures;
+
+  //Dungeon
+  mapPricing = new PIXI.Texture(resources["images/beach_theme.png"].texture, new PIXI.Rectangle(0, 0, 840, 680));
+  mapInsights = new PIXI.Texture(resources["images/cabin_theme.png"].texture, new PIXI.Rectangle(0, 0, 840, 680));
+  mapSignal = new PIXI.Texture(resources["images/beach_theme.png"].texture, new PIXI.Rectangle(0, 0, 840, 680));
+  mapRelay = new PIXI.Texture(resources["images/cabin_theme.png"].texture, new PIXI.Rectangle(0, 0, 840, 680));
+  mapGuidance = new PIXI.Texture(resources["images/beach_theme.png"].texture, new PIXI.Rectangle(0, 0, 840, 680));
+
+  currentState = 'pricing';
+  sPricing = new Sprite(mapPricing);
+  sInsights = new Sprite(mapInsights);
+  sSignal = new Sprite(mapSignal);
+  sRelay = new Sprite(mapRelay);
+  sGuidance = new Sprite(mapGuidance);
+
+  gameScene.addChild(sPricing);
+
+  startLevel(products.Pricing.label)
   //Start the game loop
   app.ticker.add(delta => gameLoop(delta));
 }
@@ -343,21 +467,60 @@ function play(delta) {
   //Does the explorer have enough health? If the width of the `innerBar`
   //is less than zero, end the game and display "You lost!"
   if (healthBar.outer.width < 0) {
+    restartGame()
     state = end;
     message.text = "Try again!";
+    message.interactive = true;
+    message.on('mousedown', onDown);
+    message.on('touchstart', onDown);
+
+
+    function onDown (eventData) {
+      console.log("heelo")
+      start()
+      startLevel(products.Pricing.label)
+      state = play
+    }
   }
+
+
 
   //If the explorer has brought the treasure to the exit,
   //end the game and display "You won!"
-  if (hitTestRectangle(treasure, door)) {
-    state = end;
-    message.text = "You won!";
+  if (hitTestRectangle(treasure, exitDoor)) {
+    if (currentState === products.Pricing.label) {
+      currentState = products.Insights.label;
+      gameScene.addChild(sInsights);
+      startLevel(products.Insights.label)
+    } else if (currentState === products.Insights.label) {
+      gameScene.addChild(sSignal);
+      currentState = products.Signal.label;
+      startLevel(products.Signal.label)
+    } else if (currentState === products.Signal.label) {
+      gameScene.addChild(sRelay);
+      currentState = products.Relay.label;
+      startLevel(products.Relay.label)
+    } else if (currentState === products.Relay.label) {
+      gameScene.addChild(sGuidance);
+      currentState = products.Guidance.label;
+      startLevel(products.Guidance.label)
+    } else if (currentState === products.Guidance.label) {
+      message.text = "You won!";
+      currentState = products.Pricing.label;
+    } else {
+      currentState = products.Pricing.label;
+    }
   }
 }
 
 function end() {
   gameScene.visible = false;
   gameOverScene.visible = true;
+}
+
+function start() {
+  gameScene.visible = true;
+  gameOverScene.visible = false;
 }
 
 /* Helper functions */
