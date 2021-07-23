@@ -3,10 +3,11 @@ const server = require('http').Server(app)
 const next = require('next')
 const dev = process.env.NODE_ENV != 'production'
 const nextApp = next({ dev })
-const host = process.env.NODE_ENV != 'production' ? 'localhost' : `10.128.0.17`
+const allowed_origins = [`10.128.0.17:4998`, `http://narwhal.stg:4998`];
+const uri = process.env.NODE_ENV != 'production' ? 'localhost:4998' : allowed_origins
 
 const io = require('socket.io')(server, { cors: {
-    origin: `http://${host}:4998`,
+    origin: uri,
     methods: ["GET", "POST"]
   }})
 
