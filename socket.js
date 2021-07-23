@@ -1,39 +1,21 @@
-// const {
-//   v1: uuidv1,
-//   v4: uuidv4,
-// } = require('uuid');
-//
-// let interval;
-//
-//
-// let users = {}
-// uuidv4();
-// let generateUserId = generate(10, function(uniqueId){
-//   // have a uniqueId
-// })
+let interval;
 
 module.exports = io => {
-    io.use((socket, next) => {
-        const username = socket.handshake.auth.username;
-        if (!username) {
-            return next(new Error("invalid username"));
-        }
-        socket.username = username;
-        next();
-    });
-
+    console.log('*****sockets are imported');
     io.on('connect', (socket) => {
         console.log('User connected')
         const users = [];
         for (let [id, socket] of io.of("/").sockets) {
-            console.log('*****socket', socket.username)
+            console.log('*****', socket.username)
             users.push({
                 userID: id,
                 username: socket.username,
             });
         }
         console.log('users server -> client', users);
-        socket.emit("users", users);
+        // socket.emit("users", users);
+
+
 
         // notify existing users
         socket.broadcast.emit("user connected", {
@@ -43,7 +25,7 @@ module.exports = io => {
 
 
         // onEmitWithInterval(socket, 'stats', '', 10000)
-        // onBroadcastWithInterval(socket, 'ranking', '', 50000)
+        onBroadcastWithInterval(socket, 'ranking', users, 50000)
         // onEmit(socket, 'news', 'hello')
 
         onReceive(socket)
@@ -51,25 +33,46 @@ module.exports = io => {
     })
 }
 
+const getApiAndEmit = ( socket, topic) => {
+    const response = new Date();
+    socket.emit(topic, response);
+    console.log(`Emitting on ${topic} topic: ${response}`)
+};
 
-// const getApiAndEmit = ( socket, topic) => {
-//     const response = new Date();
-//     socket.emit(topic, response);
-//     console.log(`Emitting on ${topic} topic: ${response}`)
-// };
-//
-// const getApiAndBroadcast = ( socket, topic) => {
-//     const response = new Date();
-//     socket.emit(topic, response);
-//     console.log(`Emitting on ${topic} topic: ${response}`)
-// };
+const getApiAndBroadcast = ( socket, topic) => {
+    const response = new Date();
+    socket.emit(topic, response);
+    console.log(`Emitting on ${topic} topic: ${response}`)
+};
 
 function onReceive(socket){
-    socket.on('login', (msg) => {
+    socket.on('score', (msg) => {
         let parsedMsg = JSON.parse(msg)
         console.log('client --> server: ' + parsedMsg + msg);
     })
 }
+
+
+function onBroadcastWithInterval(socket, topic, message, interval) {
+    if (interval) {
+        clearInterval(interval);
+    }
+    interval = setInterval(() => getApiAndBroadcast(socket, topic), interval);
+}
+
+function onDisconnect(socket) {
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+        clearInterval(interval);
+        this.users.forEach((user) => {
+            if (user.self) {
+                user.connected = false;
+            }
+        });
+    })
+}
+
+
 //
 // function onEmitWithInterval(socket, topic, message, interval) {
 //     if (interval) {
@@ -85,16 +88,10 @@ function onReceive(socket){
 //     })
 // }
 
-// function onBroadcastWithInterval(socket, topic, message, interval) {
-//     if (interval) {
-//         clearInterval(interval);
-//     }
-//     interval = setInterval(() => getApiAndBroadcast(socket, topic), interval);
-// }
 
-function onDisconnect(socket) {
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-        // clearInterval(interval);
-    })
-}
+// const getApiAndEmit = ( socket, topic) => {
+//     const response = new Date();
+//     socket.emit(topic, response);
+//     console.log(`Emitting on ${topic} topic: ${response}`)
+// };
+//

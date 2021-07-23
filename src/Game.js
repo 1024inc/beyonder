@@ -81,6 +81,14 @@ const Game = () => {
             socket.emit('score', score)
         }
 
+    }, [socket])
+
+    if (users.length > 1) {
+        console.log("u", u)
+        u = users
+    }
+
+    useEffect(() => {
         if (socket) {
             socket.on("users", (users) => {
                 users.forEach((user) => {
@@ -112,13 +120,7 @@ const Game = () => {
                 console.log(event, args);
             });
         }
-    }, [socket])
-
-    if (users.length > 1) {
-        console.log("u", u)
-        u = users
-    }
-
+    })
 
 
     console.log('leng of users', users.length)
@@ -173,7 +175,7 @@ const Game = () => {
                                             <img src='images/products/guidance_64.png' id='g' className="opacity-3" width="32" height="32"/>
                                         </div>
                                     </div>
-                                    <div className='card-header border-top text-center px-0'>
+                                    <div className='card-header border-top px-0'>
                                         <h5>Top Ten Players ({numberOfPlayers})</h5>
                                         <div>1. <span>{u[0]?.username}</span> - {ranking}</div>
                                         <div>2. <span>{u[1]?.username}</span> - {ranking}</div>

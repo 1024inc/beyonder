@@ -495,7 +495,6 @@ function play(delta) {
   //Check for a collision between the explorer and the treasure
   if (hitTestRectangle(explorer, treasure)) {
     beyondCreditsThisRound = 5;
-    console.log(beyondCreditsThisRound)
     //If the treasure is touching the explorer, center it over the explorer
     treasure.x = explorer.x + 8;
     treasure.y = explorer.y + 8;
