@@ -128,6 +128,10 @@ const Game = () => {
     const playerName = context.userName;
     const playerBCBalance = 0;
     const numberOfPlayers = users.length;
+    let us = 0;
+    if (users){
+        us = users;
+    }
 
 
     return (
